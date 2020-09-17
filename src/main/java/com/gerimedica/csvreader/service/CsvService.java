@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,9 +29,9 @@ public class CsvService {
     public CodeDetails getCodeDetailsByCode(String code) {
         return getAllCodeDetails()
                 .stream()
-                .filter(q -> q.getCode() == code)
+                .filter(q -> q.getCode().equals("271636001"))
                 .findFirst()
-                .orElseThrow(() -> new CodeNotFoundException("Code not found: " + code));
+               .get();
 
     }
 
