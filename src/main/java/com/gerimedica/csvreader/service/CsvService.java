@@ -3,13 +3,15 @@ package com.gerimedica.csvreader.service;
 import com.gerimedica.csvreader.exception.CodeNotFoundException;
 import com.gerimedica.csvreader.helper.CsvHelper;
 import com.gerimedica.csvreader.model.CodeDetails;
+import com.gerimedica.csvreader.repository.CsvRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -19,27 +21,35 @@ public class CsvService {
 
     private final Resource filePath = new ClassPathResource("exercise.csv");
     private final CsvHelper csvHelper;
+    @Autowired
+    CsvRepository csvRepository;
 
 
     public List<CodeDetails> getAllCodeDetails() {
-        //TODO read from h2
-        return csvHelper.processInputFile(filePath);
+        List<CodeDetails> codeDetails = new ArrayList<CodeDetails>();
+        csvRepository.findAll().forEach(codeDetail -> codeDetails.add(codeDetail));
+        return codeDetails;
     }
 
     public CodeDetails getCodeDetailsByCode(String code) {
         return getAllCodeDetails()
                 .stream()
-                .filter(q -> q.getCode().equals("271636001"))
+                .filter(q -> q.getCode().equals(code))
                 .findFirst()
-               .get();
+                .orElseThrow(() -> new CodeNotFoundException("Code not present"));
 
     }
 
     public void uploadAllCodeDetails() {
-        //TODO read data and upload to h2
+        try {
+            List<CodeDetails> codeDetailsList = csvHelper.processInputFile(filePath);
+            csvRepository.saveAll(codeDetailsList);
+        } catch (Exception e) {
+            throw new RuntimeException("fail to store csv data: " + e.getMessage());
+        }
     }
 
     public void deleteCodeDetails() throws Exception {
-        csvHelper.clearCsv(filePath.getFilename());
+        csvRepository.deleteAll();
     }
 }

@@ -2,6 +2,7 @@ package com.gerimedica.csvreader.endpoint;
 
 import com.gerimedica.csvreader.model.CodeDetails;
 import com.gerimedica.csvreader.service.CsvService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,11 +11,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/csv-reader")
 public class CsvEndpoint {
-    private final CsvService csvService;
-
-    public CsvEndpoint(CsvService csvService) {
-        this.csvService = csvService;
-    }
+    @Autowired
+    CsvService csvService;
 
     @GetMapping
     public List<CodeDetails> getAllCodeDetails() {

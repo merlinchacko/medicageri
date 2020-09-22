@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CsvServiceTest {
 
-    private CsvService csvService = new CsvService(new CsvHelper());
+    CsvService csvService = new CsvService(new CsvHelper());
 
     @Test
     public void getAllCodeDetails() throws IOException {
@@ -26,5 +26,11 @@ public class CsvServiceTest {
         CodeDetails details = csvService.getCodeDetailsByCode("271636001");
 
         assertEquals("Polsslag regelmatig", details.getDisplayValue());
+    }
+
+    @Test
+    public void uploadCodeDetais() throws IOException {
+        csvService.uploadAllCodeDetails();
+
     }
 }
