@@ -32,12 +32,12 @@ public class CsvService {
     }
 
     public CodeDetails getCodeDetailsByCode(String code) {
-        return getAllCodeDetails()
-                .stream()
-                .filter(q -> q.getCode().equals(code))
-                .findFirst()
-                .orElseThrow(() -> new CodeNotFoundException("Code not present"));
-
+//        return getAllCodeDetails()
+//                .stream()
+//                .filter(q -> q.getCode().equals(code))
+//                .findFirst()
+//                .orElseThrow(() -> new CodeNotFoundException("Code not present"));
+        return csvRepository.findByCode(code).orElseThrow(() -> new CodeNotFoundException("Code not present"));
     }
 
     public void uploadAllCodeDetails() {
